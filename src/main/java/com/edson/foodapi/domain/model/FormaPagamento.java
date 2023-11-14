@@ -9,7 +9,7 @@ import lombok.EqualsAndHashCode;
 @Table(name = "forma_pagamento")
 @Data
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
-public class FormaPagameto {
+public class FormaPagamento {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
