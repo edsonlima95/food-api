@@ -8,6 +8,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
+import java.util.function.Consumer;
 
 @Service
 public class CozinhaService {
@@ -20,15 +22,23 @@ public class CozinhaService {
     }
 
     public Cozinha buscarPorId(Long id) {
+
         return this.cozinhaRespository.findById(id)
-                .orElseThrow(() -> new NotFoundException("Recurso não encontrado!!"));
+                .orElseThrow(() -> new NotFoundException(String.format("Não foi possível encontrar nenhuma cozinha com codigo %d", id)));
     }
 
     public void cadastrar(Cozinha cozinha) {
+
         this.cozinhaRespository.save(cozinha);
+
     }
 
-    public Cozinha atualizar(Cozinha cozinha) {
+    public Cozinha atualizar(Long id,Cozinha cozinha) {
+
+        this.buscarPorId(id);
+
+        cozinha.setId(id);
+
         return this.cozinhaRespository.save(cozinha);
     }
 
@@ -39,7 +49,7 @@ public class CozinhaService {
         this.cozinhaRespository.deleteById(id);
     }
 
-    public List<Cozinha> buscarPorNome(String nome){
+    public List<Cozinha> buscarPorNome(String nome) {
         return this.cozinhaRespository.findByNome(nome);
     }
 }

@@ -27,6 +27,9 @@ public class RestauranteController {
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public void cadastrar(@RequestBody Restaurante restaurante) {
+
+        //System.out.println(restaurante);
+
         this.restauranteService.cadastrar(restaurante);
     }
 

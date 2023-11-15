@@ -28,6 +28,9 @@ public class RestauranteService {
     }
 
     public void cadastrar(Restaurante restaurante) {
+
+        System.out.println(restaurante);
+
         this.restauranteRepository.save(restaurante);
     }
 

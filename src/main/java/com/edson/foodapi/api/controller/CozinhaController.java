@@ -30,27 +30,23 @@ public class CozinhaController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Cozinha> buscarPorId(@PathVariable Long id) {
+    public Cozinha buscarPorId(@PathVariable Long id) {
 
-        Cozinha cozinha = this.cozinhaService.buscarPorId(id);
+        return this.cozinhaService.buscarPorId(id);
 
-        return ResponseEntity.ok(cozinha);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Cozinha> atualizar(@RequestBody Cozinha cozinha, @PathVariable Long id) {
-
-        this.cozinhaService.buscarPorId(id);
-
-        cozinha.setId(id);
-
-        return ResponseEntity.ok(this.cozinhaService.atualizar(cozinha));
+    public Cozinha atualizar(@RequestBody Cozinha cozinha, @PathVariable Long id) {
+        return this.cozinhaService.atualizar(id, cozinha);
     }
 
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deletar(@PathVariable Long id) {
+
         this.cozinhaService.deletar(id);
+
     }
 
     @GetMapping("/por-nome")
