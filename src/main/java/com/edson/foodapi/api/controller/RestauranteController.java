@@ -34,9 +34,8 @@ public class RestauranteController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Restaurante> buscarPorId(@PathVariable Long id) {
-        Restaurante restaurante = this.restauranteService.buscarPorId(id);
-        return ResponseEntity.ok(restaurante);
+    public Restaurante buscarPorId(@PathVariable Long id) {
+        return this.restauranteService.buscarPorId(id);
     }
 
     @PutMapping("/{id}")
