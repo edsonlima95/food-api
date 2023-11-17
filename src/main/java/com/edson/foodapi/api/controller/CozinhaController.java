@@ -2,7 +2,6 @@ package com.edson.foodapi.api.controller;
 
 
 import com.edson.foodapi.domain.model.Cozinha;
-import com.edson.foodapi.domain.model.Restaurante;
 import com.edson.foodapi.domain.service.CozinhaService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
