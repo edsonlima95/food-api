@@ -7,30 +7,40 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
+import org.springframework.validation.FieldError;
 import org.springframework.web.HttpRequestMethodNotSupportedException;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
+
 @ControllerAdvice
 public class ApiExceptionHanlder extends ResponseEntityExceptionHandler {
+
+    private static final String MSG_ERROR_INTERAL = "Ocorreu um erro iterno no sistema, tente novamente se persistir" +
+            "entre em contato com o suporte";
 
     @ExceptionHandler(Exception.class)
     public ResponseEntity<?> Exception() {
 
         String title = "Erro interno na aplicação";
         String type = "http://food-api/erro-interno";
-        String detail = "Ocorreu um erro iterno no sistema, tente novamente se persistir" +
-                "entre em contato com o suporte";
 
-        Problem problem = getProblem(title, type, detail, HttpStatus.INTERNAL_SERVER_ERROR).build();
+        Problem problem = getProblem(title, type, MSG_ERROR_INTERAL, HttpStatus.INTERNAL_SERVER_ERROR)
+                .build();
+
 
         return new ResponseEntity<>(problem, HttpStatus.INTERNAL_SERVER_ERROR);
         //return handleExceptionInternal(e, problem, new HttpHeaders(), HttpStatus.NOT_FOUND, request);
 
     }
+
 
     @ExceptionHandler(NotFoundException.class)
     public ResponseEntity<?> handleNotFoundException(NotFoundException e) {
@@ -39,7 +49,8 @@ public class ApiExceptionHanlder extends ResponseEntityExceptionHandler {
         String type = "http://food-api/entidade-nao-encontrada";
         String detail = e.getMessage();
 
-        Problem problem = getProblem(title, type, detail, HttpStatus.NOT_FOUND).build();
+        Problem problem = getProblem(title, type, detail, HttpStatus.NOT_FOUND)
+                .build();
 
         return new ResponseEntity<>(problem, HttpStatus.NOT_FOUND);
         //return handleExceptionInternal(e, problem, new HttpHeaders(), HttpStatus.NOT_FOUND, request);
@@ -53,7 +64,9 @@ public class ApiExceptionHanlder extends ResponseEntityExceptionHandler {
         String type = "http://food-api/regra-de-negocio";
         String detail = e.getMessage();
 
-        Problem problem = getProblem(title, type, detail, HttpStatus.BAD_REQUEST).build();
+        Problem problem = getProblem(title, type, detail, HttpStatus.BAD_REQUEST)
+                .userMessage(MSG_ERROR_INTERAL)
+                .build();
 
         return new ResponseEntity<>(problem, HttpStatus.BAD_REQUEST);
 
@@ -74,6 +87,29 @@ public class ApiExceptionHanlder extends ResponseEntityExceptionHandler {
     }
 
     //EXCEPTIONS DA SUPERCLASSE
+    @Override
+    protected ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException ex, HttpHeaders headers, HttpStatusCode status, WebRequest request) {
+        String title = "Dados inválidos";
+        String type = "http://food-api/dados-invalidos";
+        String detail = "Um ou mais campos estão incorretos, verifique os campos e tente novamente";
+
+        List<Problem.FieldValidation> fields = new ArrayList<>();
+
+        ex.getBindingResult().getAllErrors().forEach(error -> {
+
+            String fieldName = ((FieldError) error).getField();
+            String message = error.getDefaultMessage();
+
+            fields.add(new Problem.FieldValidation(fieldName, message));
+
+        });
+
+        Problem problem = getProblem(title, type, detail, HttpStatus.BAD_REQUEST)
+                .fieldValidations(fields)
+                .build();
+
+        return new ResponseEntity<>(problem, HttpStatus.BAD_REQUEST);
+    }
 
     @Override
     protected ResponseEntity<Object> handleHttpRequestMethodNotSupported(HttpRequestMethodNotSupportedException ex, HttpHeaders headers, HttpStatusCode status, WebRequest request) {
@@ -105,7 +141,9 @@ public class ApiExceptionHanlder extends ResponseEntityExceptionHandler {
                 .title(title)
                 .status(status.value())
                 .type(type)
-                .detail(detail);
+                .detail(detail)
+                .userMessage(MSG_ERROR_INTERAL)
+                .dateTime(LocalDateTime.now());
     }
 
     private Problem.ProblemBuilder getProblem(String title, HttpStatus status) {

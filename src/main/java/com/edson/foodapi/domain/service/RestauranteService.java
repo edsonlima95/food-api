@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -17,6 +18,12 @@ public class RestauranteService {
 
     @Autowired
     private RestauranteRepository restauranteRepository;
+
+    @Autowired
+    private CidadeService cidadeService;
+
+    @Autowired
+    private CozinhaService cozinhaService;
 
     public List<Restaurante> listar() {
         return this.restauranteRepository.findAll();
@@ -29,16 +36,20 @@ public class RestauranteService {
 
     public void cadastrar(Restaurante restaurante) {
 
-        System.out.println(restaurante);
+        this.cidadeService.buscarPorId(restaurante.getEndereco().getCidade().getId());
+
+        this.cozinhaService.buscarPorId(restaurante.getCozinha().getId());
 
         this.restauranteRepository.save(restaurante);
     }
 
-    public Restaurante atualizar(Restaurante restaurante, Long id) {
+    public Restaurante atualizar(Restaurante restaurante) {
 
-        this.buscarPorId(id);
+        System.out.println("linha: 48 "+restaurante.getDataCriacao());
 
-        restaurante.setId(id);
+        this.cidadeService.buscarPorId(restaurante.getEndereco().getCidade().getId());
+
+        this.cozinhaService.buscarPorId(restaurante.getCozinha().getId());
 
         return this.restauranteRepository.save(restaurante);
     }

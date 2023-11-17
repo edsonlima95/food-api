@@ -1,14 +1,18 @@
 package com.edson.foodapi.api.controller;
 
 
+import com.edson.foodapi.domain.exception.BadRequestException;
+import com.edson.foodapi.domain.exception.NotFoundException;
 import com.edson.foodapi.domain.model.Restaurante;
 import com.edson.foodapi.domain.service.RestauranteService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.math.BigDecimal;
+import java.rmi.NotBoundException;
 import java.util.List;
 import java.util.Optional;
 
@@ -26,11 +30,12 @@ public class RestauranteController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public void cadastrar(@RequestBody Restaurante restaurante) {
-
-        //System.out.println(restaurante);
-
-        this.restauranteService.cadastrar(restaurante);
+    public void cadastrar(@Valid @RequestBody Restaurante restaurante) {
+        try {
+            this.restauranteService.cadastrar(restaurante);
+        } catch (NotFoundException ex) {
+            throw new BadRequestException("Ocorreu um erro inesperado, verifique os dados e envie novamente");
+        }
     }
 
     @GetMapping("/{id}")
@@ -39,8 +44,17 @@ public class RestauranteController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Restaurante> atualizar(@RequestBody Restaurante restaurante, @PathVariable Long id) {
-        return ResponseEntity.ok(this.restauranteService.atualizar(restaurante, id));
+    public ResponseEntity<Restaurante> atualizar(@Valid @RequestBody Restaurante restaurante, @PathVariable Long id) {
+
+        this.buscarPorId(id);
+
+        restaurante.setId(id);
+
+        try {
+            return ResponseEntity.ok(this.restauranteService.atualizar(restaurante));
+        } catch (NotFoundException ex) {
+            throw new BadRequestException("Ocorreu um erro inesperado, verifique os dados e envie novamente");
+        }
     }
 
     @DeleteMapping("/{id}")
