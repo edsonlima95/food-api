@@ -43,8 +43,6 @@ public class RestauranteService {
 
     public Restaurante atualizar(Restaurante restaurante) {
 
-        System.out.println("linha: 48 "+restaurante.getDataCriacao());
-
         this.cidadeService.buscarPorId(restaurante.getEndereco().getCidade().getId());
 
         this.cozinhaService.buscarPorId(restaurante.getCozinha().getId());

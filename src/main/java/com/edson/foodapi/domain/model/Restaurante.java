@@ -1,20 +1,23 @@
 package com.edson.foodapi.domain.model;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
-import jakarta.persistence.*;
-import lombok.*;
 import com.edson.foodapi.domain.validationGroups.ValidationsGroups;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import jakarta.persistence.*;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.PositiveOrZero;
 import jakarta.validation.groups.ConvertGroup;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -36,15 +39,14 @@ public class Restaurante {
     @Column(name = "taxa_frete", precision = 10, scale = 2)
     private BigDecimal taxaFrete;
 
-    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
+
     @CreationTimestamp
     @Column(nullable = false)
-    private LocalDateTime dataCriacao;
+    private OffsetDateTime dataCriacao;
 
-    @JsonIgnore
     @UpdateTimestamp
     @Column(nullable = false)
-    private LocalDateTime dataAtualizacao;
+    private OffsetDateTime dataAtualizacao;
 
     @Valid //Indica que as propriedades da cozinha tbm tem que ser validadas
     @NotNull
@@ -57,11 +59,9 @@ public class Restaurante {
     @Embedded
     private Endereco endereco;
 
-    @JsonIgnore
     @OneToMany(mappedBy = "restaurante")
     private List<Produto> produtos = new ArrayList<>();
 
-    @JsonIgnore
     @ManyToMany
     @JoinTable(name = "restaurante_forma_pagamentos",
             joinColumns = @JoinColumn(name = "restaurante_id"),
