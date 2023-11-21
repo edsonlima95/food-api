@@ -1,6 +1,8 @@
 package com.edson.foodapi.api.controller;
 
 
+import com.edson.foodapi.api.assembler.RestauranteDTOAssembler;
+import com.edson.foodapi.api.model.RestauranteDTO;
 import com.edson.foodapi.domain.exception.BadRequestException;
 import com.edson.foodapi.domain.exception.NotFoundException;
 import com.edson.foodapi.domain.model.Restaurante;
@@ -22,9 +24,14 @@ public class RestauranteController {
     @Autowired
     private RestauranteService restauranteService;
 
+    @Autowired
+    RestauranteDTOAssembler restauranteAssembler;
+
     @GetMapping
-    public List<Restaurante> listar() {
-        return this.restauranteService.listar();
+    public List<RestauranteDTO> listar() {
+        List<Restaurante> restauranteList = this.restauranteService.listar();
+        return restauranteAssembler.toListDTO(restauranteList);
+
     }
 
     @PostMapping
@@ -38,8 +45,11 @@ public class RestauranteController {
     }
 
     @GetMapping("/{id}")
-    public Restaurante buscarPorId(@PathVariable Long id) {
-        return this.restauranteService.buscarPorId(id);
+    public RestauranteDTO buscarPorId(@PathVariable Long id) {
+
+        Restaurante restaurante = this.restauranteService.buscarPorId(id);
+
+        return this.restauranteAssembler.toDto(restaurante);
     }
 
     @PutMapping("/{id}")
