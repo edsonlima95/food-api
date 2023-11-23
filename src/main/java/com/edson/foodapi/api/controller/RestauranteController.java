@@ -2,7 +2,8 @@ package com.edson.foodapi.api.controller;
 
 
 import com.edson.foodapi.api.assembler.RestauranteDTOAssembler;
-import com.edson.foodapi.api.model.RestauranteDTO;
+import com.edson.foodapi.api.model.Inputs.RestauranteInput;
+import com.edson.foodapi.api.model.dto.RestauranteDTO;
 import com.edson.foodapi.domain.exception.BadRequestException;
 import com.edson.foodapi.domain.exception.NotFoundException;
 import com.edson.foodapi.domain.model.Restaurante;
@@ -36,11 +37,14 @@ public class RestauranteController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public void cadastrar(@Valid @RequestBody Restaurante restaurante) {
+    public void cadastrar(@Valid @RequestBody RestauranteInput restauranteInput) {
+
+        Restaurante restaurante = this.restauranteAssembler.toModel(restauranteInput);
+
         try {
             this.restauranteService.cadastrar(restaurante);
         } catch (NotFoundException ex) {
-            throw new BadRequestException("Ocorreu um erro inesperado, verifique os dados e envie novamente");
+            throw new BadRequestException(ex.getMessage());
         }
     }
 
@@ -53,14 +57,15 @@ public class RestauranteController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Restaurante> atualizar(@Valid @RequestBody Restaurante restaurante, @PathVariable Long id) {
+    public RestauranteDTO atualizar(@Valid @RequestBody RestauranteInput restauranteInput, @PathVariable Long id) {
 
-        this.buscarPorId(id);
-
-        restaurante.setId(id);
+        Restaurante restaurante = this.restauranteAssembler.toModel(restauranteInput);
 
         try {
-            return ResponseEntity.ok(this.restauranteService.atualizar(restaurante));
+
+            Restaurante res = this.restauranteService.atualizar(restaurante, id);
+            return this.restauranteAssembler.toDto(res);
+
         } catch (NotFoundException ex) {
             throw new BadRequestException("Ocorreu um erro inesperado, verifique os dados e envie novamente");
         }
@@ -91,5 +96,17 @@ public class RestauranteController {
     @GetMapping("/buscar-primeiro")
     public Optional<Restaurante> buscaPrimeiro() {
         return this.restauranteService.buscaPrimeiro();
+    }
+
+    @PutMapping("/{id}/ativar")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void ativar(@PathVariable Long id){
+        this.restauranteService.ativar(id);
+    }
+
+    @DeleteMapping("/{id}/inativar")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void inativar(@PathVariable Long id){
+        this.restauranteService.inativar(id);
     }
 }

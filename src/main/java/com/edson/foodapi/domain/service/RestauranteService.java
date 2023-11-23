@@ -41,11 +41,15 @@ public class RestauranteService {
         this.restauranteRepository.save(restaurante);
     }
 
-    public Restaurante atualizar(Restaurante restaurante) {
+    public Restaurante atualizar(Restaurante restaurante, Long id) {
+
+        this.buscarPorId(id);
 
         this.cidadeService.buscarPorId(restaurante.getEndereco().getCidade().getId());
 
         this.cozinhaService.buscarPorId(restaurante.getCozinha().getId());
+
+        restaurante.setId(id);
 
         return this.restauranteRepository.save(restaurante);
     }
@@ -67,5 +71,27 @@ public class RestauranteService {
 
     public Optional<Restaurante> buscaPrimeiro() {
         return this.restauranteRepository.buscaPrimeiro();
+    }
+
+    public void ativar(Long restauranteId){
+
+        Restaurante restaurante = this.restauranteRepository.findById(restauranteId)
+                .orElseThrow(() -> new NotFoundException("Recurso não encontrado!"));
+
+        restaurante.setAtivo(true);
+
+        this.restauranteRepository.save(restaurante);
+
+    }
+
+    public void inativar(Long restauranteId){
+
+        Restaurante restaurante = this.restauranteRepository.findById(restauranteId)
+                .orElseThrow(() -> new NotFoundException("Recurso não encontrado!"));
+
+        restaurante.setAtivo(false);
+
+        this.restauranteRepository.save(restaurante);
+
     }
 }

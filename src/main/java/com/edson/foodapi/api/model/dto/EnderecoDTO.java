@@ -1,4 +1,4 @@
-package com.edson.foodapi.api.model;
+package com.edson.foodapi.api.model.dto;
 
 
 import lombok.Getter;
@@ -12,5 +12,5 @@ public class EnderecoDTO {
     private String logradouro;
     private String numero;
     private String bairro;
-    private CidadeDTO cidade;
+    private CidadeResumoDTO cidade;
 }

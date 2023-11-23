@@ -1,6 +1,7 @@
-package com.edson.foodapi.api.model;
+package com.edson.foodapi.api.model.dto;
 
 
+import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
 

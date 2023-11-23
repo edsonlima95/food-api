@@ -31,31 +31,24 @@ public class Restaurante {
     @EqualsAndHashCode.Include
     private Long id;
 
-    @NotBlank
-    @Column(nullable = false, length = 100)
     private String nome;
 
-    @PositiveOrZero
-    @Column(name = "taxa_frete", precision = 10, scale = 2)
     private BigDecimal taxaFrete;
 
+    private Boolean ativo = Boolean.TRUE;
 
     @CreationTimestamp
-    @Column(nullable = false)
     private OffsetDateTime dataCriacao;
 
     @UpdateTimestamp
-    @Column(nullable = false)
     private OffsetDateTime dataAtualizacao;
 
-    @Valid //Indica que as propriedades da cozinha tbm tem que ser validadas
+    /*@Valid //Indica que as propriedades da cozinha tbm tem que ser validadas
     @NotNull
-    @ConvertGroup(to = ValidationsGroups.CozinhaId.class)
+    @ConvertGroup(to = ValidationsGroups.CozinhaId.class)*/
     @ManyToOne
     private Cozinha cozinha;
 
-    @Valid
-    @NotNull
     @Embedded
     private Endereco endereco;
 

@@ -1,6 +1,5 @@
-package com.edson.foodapi.api.model;
+package com.edson.foodapi.api.model.dto;
 
-import com.edson.foodapi.domain.model.Estado;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -8,7 +7,8 @@ import lombok.Setter;
 @Setter
 public class CidadeDTO {
 
+    private Long id;
     private String nome;
-    private String estado;
+    private EstadoDTO estado;
 
 }
