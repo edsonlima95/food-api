@@ -3,12 +3,14 @@ package com.edson.foodapi.api.model.dto;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.time.OffsetDateTime;
+
 @Getter
 @Setter
-public class CidadeDTO {
+public class UsuarioDTO {
 
     private Long id;
     private String nome;
-    private EstadoDTO estado;
+    private String email;
 
 }

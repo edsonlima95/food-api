@@ -2,7 +2,7 @@ package com.edson.foodapi.api.controller;
 
 
 import com.edson.foodapi.api.assembler.CidadeDTOAssembler;
-import com.edson.foodapi.api.model.dto.CidadeDTO;
+import com.edson.foodapi.api.model.dto.UsuarioDTO;
 import com.edson.foodapi.domain.model.Cidade;
 import com.edson.foodapi.domain.service.CidadeService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,7 +23,7 @@ public class CidadeController {
     private CidadeDTOAssembler cidadeDTOAssembler;
 
     @GetMapping
-    public List<CidadeDTO> listar() {
+    public List<UsuarioDTO> listar() {
 
         List<Cidade> cidades = this.cidadeService.listar();
 

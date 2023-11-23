@@ -5,6 +5,7 @@ import jakarta.persistence.*;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.SourceType;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -20,18 +21,13 @@ public class Usuario {
     @EqualsAndHashCode.Include
     private Long id;
 
-    @Column(nullable = false, length = 100)
     private String nome;
 
-    @Column(nullable = false, length = 100)
     private String email;
 
-    @Column(nullable = false, length = 200)
     private String senha;
 
-    @JsonIgnore
     @CreationTimestamp
-    @Column(nullable = false)
     private LocalDateTime dataCriacao;
 
     @JsonIgnore
