@@ -15,19 +15,14 @@ public class Produto {
     @EqualsAndHashCode.Include
     private Long id;
 
-    @Column(nullable = false, length = 100)
     private String nome;
 
-    @Column(length = 200)
     private String descricao;
 
-    @Column(nullable = false, precision = 10, scale = 2)
     private String preco;
 
-    @Column
     private boolean ativo;
 
-    @JsonIgnore
     @ManyToOne
     private Restaurante restaurante;
 }

@@ -2,6 +2,7 @@ package com.edson.foodapi.api.exception;
 
 import com.edson.foodapi.domain.exception.BadRequestException;
 import com.edson.foodapi.domain.exception.NotFoundException;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
@@ -40,7 +41,6 @@ public class ApiExceptionHanlder extends ResponseEntityExceptionHandler {
         //return handleExceptionInternal(e, problem, new HttpHeaders(), HttpStatus.NOT_FOUND, request);
 
     }
-
 
     @ExceptionHandler(NotFoundException.class)
     public ResponseEntity<?> handleNotFoundException(NotFoundException e) {
@@ -86,6 +86,20 @@ public class ApiExceptionHanlder extends ResponseEntityExceptionHandler {
 
     }
 
+    @ExceptionHandler(DataIntegrityViolationException.class)
+    public ResponseEntity<?> handleDataIntegrityViolationException(){
+        String title = "Erro de integridade";
+        String type = "http://food-api/erro-de-itegridade";
+        String detail = "Parece que o recurso está sendo usado por outra entidade";
+
+        Problem problem = getProblem(title, type, detail, HttpStatus.CONFLICT).build();
+
+//        return  ResponseEntity.status(HttpStatus.CONFLICT).body(problem);
+        return new ResponseEntity<>(problem, HttpStatus.CONFLICT);
+    }
+
+
+
     //EXCEPTIONS DA SUPERCLASSE
     @Override
     protected ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException ex, HttpHeaders headers, HttpStatusCode status, WebRequest request) {
@@ -124,7 +138,8 @@ public class ApiExceptionHanlder extends ResponseEntityExceptionHandler {
     }
 
     @Override
-    protected ResponseEntity<Object> handleHttpMessageNotReadable(HttpMessageNotReadableException ex, HttpHeaders headers, HttpStatusCode status, WebRequest request) {
+    protected ResponseEntity<Object> handleHttpMessageNotReadable(HttpMessageNotReadableException ex,
+                                                                  HttpHeaders headers, HttpStatusCode status, WebRequest request) {
 
         String title = "Mensagem incompreensível";
         String type = "http://food-api/mensagem-incompreensivel";

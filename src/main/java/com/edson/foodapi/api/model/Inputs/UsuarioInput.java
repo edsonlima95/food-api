@@ -10,19 +10,9 @@ import java.time.OffsetDateTime;
 
 @Getter
 @Setter
-public class UsuarioInput {
-
-    @NotBlank
-    private String nome;
-
-    @NotBlank
-    @Email
-    private String email;
+public class UsuarioInput extends UsuarioInputUpdate {
 
     @NotBlank
     private String senha;
-/*
-    @NotNull
-    private OffsetDateTime dataCriacao;*/
 
 }

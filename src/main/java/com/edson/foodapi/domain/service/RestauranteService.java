@@ -41,15 +41,13 @@ public class RestauranteService {
         this.restauranteRepository.save(restaurante);
     }
 
-    public Restaurante atualizar(Restaurante restaurante, Long id) {
-
-        this.buscarPorId(id);
+    public Restaurante atualizar(Restaurante restaurante) {
 
         this.cidadeService.buscarPorId(restaurante.getEndereco().getCidade().getId());
 
         this.cozinhaService.buscarPorId(restaurante.getCozinha().getId());
 
-        restaurante.setId(id);
+
 
         return this.restauranteRepository.save(restaurante);
     }

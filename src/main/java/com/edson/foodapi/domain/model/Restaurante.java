@@ -19,7 +19,9 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.time.OffsetDateTime;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Entity
 @Data
@@ -60,5 +62,5 @@ public class Restaurante {
             joinColumns = @JoinColumn(name = "restaurante_id"),
             inverseJoinColumns = @JoinColumn(name = "pagamento_id")
     )
-    private List<FormaPagamento> formaPagamentos = new ArrayList<>();
+    private Set<FormaPagamento> formaPagamentos = new HashSet<>();
 }

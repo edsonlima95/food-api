@@ -61,9 +61,13 @@ public class RestauranteController {
 
         Restaurante restaurante = this.restauranteAssembler.toModel(restauranteInput);
 
+        this.restauranteService.buscarPorId(id);
+
+        restaurante.setId(id);
+
         try {
 
-            Restaurante res = this.restauranteService.atualizar(restaurante, id);
+            Restaurante res = this.restauranteService.atualizar(restaurante);
             return this.restauranteAssembler.toDto(res);
 
         } catch (NotFoundException ex) {

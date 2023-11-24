@@ -2,6 +2,7 @@ package com.edson.foodapi.api.controller;
 
 
 import com.edson.foodapi.api.assembler.UsuarioDTOAssembler;
+import com.edson.foodapi.api.model.Inputs.SenhaInput;
 import com.edson.foodapi.api.model.Inputs.UsuarioInput;
 import com.edson.foodapi.api.model.Inputs.UsuarioInputUpdate;
 import com.edson.foodapi.api.model.dto.UsuarioDTO;
@@ -43,6 +44,14 @@ public class UsuarioController {
         usuarioAtual = this.usuarioService.atualizar(usuarioAtual);
 
         return this.usuarioDTOAssembler.toDto(usuarioAtual);
+
+    }
+
+    @PutMapping("/{id}/senha")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void atualizarSenha(@Valid @RequestBody SenhaInput senhaInput, @PathVariable Long id) {
+
+        this.usuarioService.alterarSenha(id, senhaInput.getSenhaAtual(), senhaInput.getNovaSenha());
 
     }
 }
