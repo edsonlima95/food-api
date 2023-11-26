@@ -21,7 +21,7 @@ public class CidadeService {
 
     public Cidade buscarPorId(Long id){
         return this.cidadeRepository.findById(id)
-                    .orElseThrow(() -> new NotFoundException("Cidade não encontrada"));
+                    .orElseThrow(() -> new NotFoundException(id));
     }
 }
 

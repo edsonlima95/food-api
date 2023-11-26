@@ -1,10 +1,12 @@
 package com.edson.foodapi.api.assembler;
 
 import com.edson.foodapi.api.model.Inputs.RestauranteInput;
+import com.edson.foodapi.api.model.Inputs.UsuarioInputUpdate;
 import com.edson.foodapi.api.model.dto.CidadeResumoDTO;
 import com.edson.foodapi.api.model.dto.RestauranteDTO;
 import com.edson.foodapi.domain.model.Cidade;
 import com.edson.foodapi.domain.model.Restaurante;
+import com.edson.foodapi.domain.model.Usuario;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -29,6 +31,10 @@ public class RestauranteDTOAssembler {
 
     public Restaurante toModel(RestauranteInput restauranteInput) {
         return this.modelMapper.map(restauranteInput, Restaurante.class);
+    }
+
+    public void toModelObject(RestauranteInput restauranteInput, Restaurante restaurante) {
+        this.modelMapper.map(restauranteInput, restaurante);
     }
 
     public List<RestauranteDTO> toListDTO(List<Restaurante> restaurantes) {

@@ -36,6 +36,6 @@ create table item_pedido (
   pedido_id int8 NOT NULL,
   produto_id int8 NOT NULL,
 
-  foreign key (pedido_id) references pedido (id),
+  foreign key (pedido_id) references pedido (id) ON DELETE CASCADE,
   foreign key (produto_id) references produto (id)
 );

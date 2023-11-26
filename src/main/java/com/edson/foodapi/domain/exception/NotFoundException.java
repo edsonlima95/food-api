@@ -10,8 +10,12 @@ public class NotFoundException extends RuntimeException {
         super(message);
     }
 
+    public NotFoundException() {
+        this("Recurso não encontrado");
+    }
+
     public NotFoundException(Long id) {
-        this(String.format("O recurso de ID %d, não pode ser econtrado",id));
+        this(String.format("Recurso de ID %d, não pode ser econtrado",id));
     }
 }
 

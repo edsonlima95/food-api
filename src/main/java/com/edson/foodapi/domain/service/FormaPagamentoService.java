@@ -26,7 +26,7 @@ public class FormaPagamentoService {
 
     public FormaPagamento buscarPorId(Long id) {
         return this.formaPagamentoRepository.findById(id)
-                .orElseThrow(() -> new NotFoundException("Recurso não foi encontrado!"));
+                .orElseThrow(() -> new NotFoundException(id));
     }
 
     public FormaPagamento atualizar(FormaPagamento formaPagamento) {

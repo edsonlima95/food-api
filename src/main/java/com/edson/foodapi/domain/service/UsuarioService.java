@@ -47,7 +47,7 @@ public class UsuarioService {
     public Usuario buscarPorId(Long id) {
 
         return this.usuarioRepository.findById(id)
-                .orElseThrow(() -> new NotFoundException("Usuário não foi encontrado"));
+                .orElseThrow(() -> new NotFoundException(id));
 
     }
 

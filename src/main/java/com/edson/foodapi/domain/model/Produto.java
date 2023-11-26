@@ -5,6 +5,8 @@ import jakarta.persistence.*;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
+import java.math.BigDecimal;
+
 @Entity
 @Data
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
@@ -19,9 +21,9 @@ public class Produto {
 
     private String descricao;
 
-    private String preco;
+    private BigDecimal preco;
 
-    private boolean ativo;
+    private Boolean ativo;
 
     @ManyToOne
     private Restaurante restaurante;

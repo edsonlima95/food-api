@@ -59,15 +59,14 @@ public class RestauranteController {
     @PutMapping("/{id}")
     public RestauranteDTO atualizar(@Valid @RequestBody RestauranteInput restauranteInput, @PathVariable Long id) {
 
-        Restaurante restaurante = this.restauranteAssembler.toModel(restauranteInput);
+        Restaurante restauranteAtual = this.restauranteService.buscarPorId(id);
 
-        this.restauranteService.buscarPorId(id);
-
-        restaurante.setId(id);
+        this.restauranteAssembler.toModelObject(restauranteInput, restauranteAtual);
 
         try {
 
-            Restaurante res = this.restauranteService.atualizar(restaurante);
+            Restaurante res = this.restauranteService.atualizar(restauranteAtual);
+
             return this.restauranteAssembler.toDto(res);
 
         } catch (NotFoundException ex) {

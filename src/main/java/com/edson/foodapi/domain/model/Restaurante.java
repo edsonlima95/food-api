@@ -63,4 +63,12 @@ public class Restaurante {
             inverseJoinColumns = @JoinColumn(name = "pagamento_id")
     )
     private Set<FormaPagamento> formaPagamentos = new HashSet<>();
+
+    public boolean aceitaFormaPagamento(FormaPagamento formaPagamento) {
+        return this.getFormaPagamentos().contains(formaPagamento);
+    }
+
+    public boolean naoAceitaFormaPagamento(FormaPagamento formaPagamento) {
+        return !aceitaFormaPagamento(formaPagamento);
+    }
 }

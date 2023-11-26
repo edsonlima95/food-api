@@ -2,6 +2,7 @@ package com.edson.foodapi.domain.model;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -26,29 +27,40 @@ public class Pedido {
 
 	@Embedded
 	private Endereco enderecoEntrega;
-	
-	private StatusPedido status;
-	
-	@CreationTimestamp
-	private LocalDateTime dataCriacao;
 
-	private LocalDateTime dataConfirmacao;
-	private LocalDateTime dataCancelamento;
-	private LocalDateTime dataEntrega;
-	
+	private StatusPedido status;
+
+	@CreationTimestamp
+	private OffsetDateTime dataCriacao;
+
+	@CreationTimestamp
+	private OffsetDateTime dataConfirmacao;
+
+	private OffsetDateTime dataCancelamento;
+
+	private OffsetDateTime dataEntrega;
+
 	@ManyToOne
-	@JoinColumn(nullable = false)
 	private FormaPagamento formaPagamento;
 	
 	@ManyToOne
-	@JoinColumn(nullable = false)
 	private Restaurante restaurante;
 	
 	@ManyToOne
-	@JoinColumn(name = "usuario_cliente_id", nullable = false)
+	@JoinColumn(name = "usuario_cliente_id")
 	private Usuario cliente;
-	
-	@OneToMany(mappedBy = "pedido")
+
+	@OneToMany(mappedBy = "pedido", cascade = CascadeType.ALL)
 	private List<ItemPedido> itens = new ArrayList<>();
+
+	public void calcularValorTotal() {
+		this.getItens().forEach(ItemPedido::calcularPrecoTotal);
+
+		this.subtotal = getItens().stream()
+				.map(ItemPedido::getPrecoTotal)
+				.reduce(BigDecimal.ZERO, BigDecimal::add);
+
+		this.valorTotal = this.subtotal.add(this.taxaFrete);
+	}
 
 }

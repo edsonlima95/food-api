@@ -29,7 +29,7 @@ public class RestauranteService {
 
     public Restaurante buscarPorId(Long id) {
         return this.restauranteRepository.findById(id)
-                .orElseThrow(() -> new NotFoundException("Recurso não encontrado!!"));
+                .orElseThrow(() -> new NotFoundException(id));
     }
 
     public void cadastrar(Restaurante restaurante) {
@@ -46,8 +46,6 @@ public class RestauranteService {
         this.cidadeService.buscarPorId(restaurante.getEndereco().getCidade().getId());
 
         this.cozinhaService.buscarPorId(restaurante.getCozinha().getId());
-
-
 
         return this.restauranteRepository.save(restaurante);
     }

@@ -29,8 +29,11 @@ CREATE TABLE grupo (
 CREATE TABLE grupo_permissoes (
 	grupo_id int8 NOT NULL,
 	permissao_id int8 NOT NULL,
+
 	FOREIGN KEY (permissao_id) REFERENCES permissao(id),
-	FOREIGN KEY (grupo_id) REFERENCES grupo(id)
+	FOREIGN KEY (grupo_id) REFERENCES grupo(id) ON DELETE CASCADE,
+
+	primary key (grupo_id, permissao_id)
 );
 
 CREATE TABLE usuario (
@@ -42,10 +45,14 @@ CREATE TABLE usuario (
 );
 
 CREATE TABLE usuario_grupos (
+
 	usuario_id int8 NOT NULL,
 	grupo_id int8 NOT NULL,
-	FOREIGN KEY (usuario_id) REFERENCES usuario(id),
-	FOREIGN KEY (grupo_id) REFERENCES grupo(id)
+
+	FOREIGN KEY (usuario_id) REFERENCES usuario(id) ON DELETE CASCADE,
+	FOREIGN KEY (grupo_id) REFERENCES grupo(id),
+
+	primary key (usuario_id, grupo_id)
 );
 
 
@@ -68,6 +75,7 @@ CREATE TABLE restaurante (
 	taxa_frete numeric(10, 2) NULL,
 	cozinha_id int8 NULL,
 	endereco_cidade_id int8 NULL,
+	ativo bool NOT NULL DEFAULT TRUE,
 	FOREIGN KEY (cozinha_id) REFERENCES cozinha(id),
 	FOREIGN KEY (endereco_cidade_id) REFERENCES cidade(id)
 );
@@ -75,10 +83,10 @@ CREATE TABLE restaurante (
 
 CREATE TABLE produto (
 	id bigserial PRIMARY KEY NOT NULL,
-	ativo bool NULL,
+	ativo bool NOT NULL,
 	descricao varchar(200) NULL,
 	nome varchar(100) NOT NULL,
 	preco varchar(255) NOT NULL,
 	restaurante_id int8 NULL,
-	FOREIGN KEY (restaurante_id) REFERENCES restaurante(id)
+	FOREIGN KEY (restaurante_id) REFERENCES restaurante(id) ON DELETE CASCADE
 );
