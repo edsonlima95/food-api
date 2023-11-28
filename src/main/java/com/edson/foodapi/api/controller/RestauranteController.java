@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.*;
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 @RestController
 @RequestMapping("/restaurantes")
@@ -111,5 +112,28 @@ public class RestauranteController {
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void inativar(@PathVariable Long id){
         this.restauranteService.inativar(id);
+    }
+
+    @PutMapping("/{id}/abertura")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void abrir(@PathVariable Long id){
+        this.restauranteService.abrir(id);
+    }
+    @PutMapping("/{id}/fechamento")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void fechar(@PathVariable Long id){
+        this.restauranteService.fechar(id);
+    }
+
+    @DeleteMapping("/fechamento")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void fechamentoCompleto(@RequestBody Set<Long> restaurantesId){
+        this.restauranteService.fechamentoEmMassa(restaurantesId);
+    }
+
+    @PutMapping("/abertura")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void aberturaCompleto(@RequestBody Set<Long> restaurantesId){
+        this.restauranteService.aberturaEmMassa(restaurantesId);
     }
 }

@@ -1,12 +1,8 @@
 package com.edson.foodapi.api.assembler;
 
 import com.edson.foodapi.api.model.Inputs.ProdutoInput;
-import com.edson.foodapi.api.model.Inputs.UsuarioInput;
-import com.edson.foodapi.api.model.Inputs.UsuarioInputUpdate;
 import com.edson.foodapi.api.model.dto.ProdutoDTO;
-import com.edson.foodapi.api.model.dto.UsuarioDTO;
 import com.edson.foodapi.domain.model.Produto;
-import com.edson.foodapi.domain.model.Usuario;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;

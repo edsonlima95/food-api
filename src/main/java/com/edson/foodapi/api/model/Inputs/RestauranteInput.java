@@ -20,8 +20,6 @@ public class RestauranteInput {
     @PositiveOrZero
     private BigDecimal taxaFrete;
 
-    private OffsetDateTime dataCriacao;
-
     @Valid
     @NotNull
     private CozinhaIdInput cozinha;

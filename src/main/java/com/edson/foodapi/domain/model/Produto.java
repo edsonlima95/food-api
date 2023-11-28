@@ -1,9 +1,10 @@
 package com.edson.foodapi.domain.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.Getter;
 
 import java.math.BigDecimal;
 
@@ -23,8 +24,8 @@ public class Produto {
 
     private BigDecimal preco;
 
-    private Boolean ativo;
-
     @ManyToOne
     private Restaurante restaurante;
+
+
 }

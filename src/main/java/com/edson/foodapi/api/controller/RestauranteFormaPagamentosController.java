@@ -47,7 +47,6 @@ public class RestauranteFormaPagamentosController {
 
         this.restauranteService.atualizar(restaurante);
 
-
     }
 
     @DeleteMapping("/{formaPagamentoId}")

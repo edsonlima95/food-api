@@ -30,7 +30,6 @@ public class Usuario {
     @CreationTimestamp
     private LocalDateTime dataCriacao;
 
-    @JsonIgnore
     @ManyToMany
     @JoinTable(
             joinColumns = @JoinColumn(name = "usuario_id"),

@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 @Service
 public class RestauranteService {
@@ -72,7 +73,7 @@ public class RestauranteService {
     public void ativar(Long restauranteId){
 
         Restaurante restaurante = this.restauranteRepository.findById(restauranteId)
-                .orElseThrow(() -> new NotFoundException("Recurso não encontrado!"));
+                .orElseThrow(() -> new NotFoundException(restauranteId));
 
         restaurante.setAtivo(true);
 
@@ -89,5 +90,35 @@ public class RestauranteService {
 
         this.restauranteRepository.save(restaurante);
 
+    }
+
+    public void abrir(Long restauranteId){
+
+        Restaurante restaurante = this.restauranteRepository.findById(restauranteId)
+                .orElseThrow(() -> new NotFoundException(restauranteId));
+
+        restaurante.setAberto(true);
+
+        this.restauranteRepository.save(restaurante);
+
+    }
+
+    public void fechar(Long restauranteId){
+
+        Restaurante restaurante = this.restauranteRepository.findById(restauranteId)
+                .orElseThrow(() -> new NotFoundException(restauranteId));
+
+        restaurante.setAberto(false);
+
+        this.restauranteRepository.save(restaurante);
+
+    }
+
+    public void fechamentoEmMassa(Set<Long> restaurantesId){
+        restaurantesId.forEach(this::fechar);
+    }
+
+    public void aberturaEmMassa(Set<Long> restaurantesId){
+        restaurantesId.forEach(this::abrir);
     }
 }
