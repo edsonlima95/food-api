@@ -6,6 +6,7 @@ import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.edson.foodapi.domain.exception.BadRequestException;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -28,19 +29,19 @@ public class Pedido {
 	@Embedded
 	private Endereco enderecoEntrega;
 
-	private StatusPedido status;
+	@Enumerated(EnumType.STRING)
+	private StatusPedido status = StatusPedido.CRIADO;
 
 	@CreationTimestamp
 	private OffsetDateTime dataCriacao;
 
-	@CreationTimestamp
 	private OffsetDateTime dataConfirmacao;
 
 	private OffsetDateTime dataCancelamento;
 
 	private OffsetDateTime dataEntrega;
 
-	@ManyToOne
+	@ManyToOne(fetch = FetchType.LAZY)
 	private FormaPagamento formaPagamento;
 	
 	@ManyToOne
@@ -61,6 +62,31 @@ public class Pedido {
 				.reduce(BigDecimal.ZERO, BigDecimal::add);
 
 		this.valorTotal = this.subtotal.add(this.taxaFrete);
+	}
+
+	public void confirmar(){
+		setStatus(StatusPedido.CONFIRMADO);
+		setDataConfirmacao(OffsetDateTime.now());
+	}
+
+	public void entregar(){
+		setStatus(StatusPedido.ENTREGUE);
+		setDataEntrega(OffsetDateTime.now());
+	}
+
+	public void cancelar(){
+		setStatus(StatusPedido.CANCELADO);
+		setDataCancelamento(OffsetDateTime.now());
+	}
+
+
+	private void setStatus(StatusPedido novoStatusPedido){
+		if(getStatus().naoPodeAlterarPara(novoStatusPedido)){
+			throw new BadRequestException(String.format("O status %s não pode ser alterado para o status de %s",
+					getStatus().getDescricao(), novoStatusPedido.getDescricao()));
+		}
+
+		this.status = novoStatusPedido;
 	}
 
 }
