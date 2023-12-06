@@ -1,4 +1,5 @@
-package com.edson.foodapi.domain.repositoryImpl;
+package com.edson.foodapi.domain.infra.repository;
+
 
 import com.edson.foodapi.domain.repository.CustomJpaRepository;
 import jakarta.persistence.EntityManager;

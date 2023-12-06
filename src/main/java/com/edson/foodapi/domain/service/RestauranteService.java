@@ -58,18 +58,6 @@ public class RestauranteService {
         this.restauranteRepository.deleteById(id);
     }
 
-    public List<Restaurante> buscaCompleta(String nome, BigDecimal taxaInicial, BigDecimal taxaFinal) {
-        return this.restauranteRepository.buscarCompleta(nome, taxaInicial, taxaFinal);
-    }
-
-    public List<Restaurante> buscaComFreteGratis(String nome) {
-        return this.restauranteRepository.comFreteGratisENome(nome);
-    }
-
-    public Optional<Restaurante> buscaPrimeiro() {
-        return this.restauranteRepository.buscaPrimeiro();
-    }
-
     public void ativar(Long restauranteId){
 
         Restaurante restaurante = this.restauranteRepository.findById(restauranteId)
@@ -121,4 +109,19 @@ public class RestauranteService {
     public void aberturaEmMassa(Set<Long> restaurantesId){
         restaurantesId.forEach(this::abrir);
     }
+
+
+    //METODOS DAS IMPLEMENTAÇÕES DO REPOSITORIO CRITERIA.
+   /* public List<Restaurante> buscaCompleta(String nome, BigDecimal taxaInicial, BigDecimal taxaFinal) {
+        return this.restauranteRepository.buscarCompleta(nome, taxaInicial, taxaFinal);
+    }*/
+
+   /* public List<Restaurante> buscaComFreteGratis(String nome) {
+        return this.restauranteRepository.comFreteGratisENome(nome);
+    }*/
+
+    public Optional<Restaurante> buscaPrimeiro() {
+        return this.restauranteRepository.buscaPrimeiro();
+    }
+
 }

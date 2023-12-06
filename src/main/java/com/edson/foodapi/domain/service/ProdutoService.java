@@ -25,6 +25,10 @@ public class ProdutoService {
         this.produtoRepository.save(produto);
     }
 
+    public List<Produto> buscarPorAtivos(Restaurante restaurante){
+        return this.produtoRepository.findAtivosByRestaurante(restaurante);
+    }
+
     public List<Produto> buscarPorRestaurenteId(Restaurante restaurante){
         return this.produtoRepository.findByRestaurante(restaurante);
     }

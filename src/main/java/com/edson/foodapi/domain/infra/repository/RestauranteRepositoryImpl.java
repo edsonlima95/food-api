@@ -1,4 +1,4 @@
-package com.edson.foodapi.domain.repositoryImpl;
+package com.edson.foodapi.domain.infra.repository;
 
 import com.edson.foodapi.domain.infra.specs.RestauranteSpecs;
 import com.edson.foodapi.domain.model.Restaurante;
@@ -17,7 +17,6 @@ import org.springframework.util.StringUtils;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
 public class RestauranteRepositoryImpl implements RestauranteRepositoryQueries {
@@ -29,7 +28,7 @@ public class RestauranteRepositoryImpl implements RestauranteRepositoryQueries {
     @Lazy //Diz ao spring para injetar so quando for preciso, caso contrario entraria em loop de repositorios de restaurantes
     private RestauranteRepository restauranteRepository;
 
-    @Override
+   /* @Override
     public List<Restaurante> buscarCompleta(String nome, BigDecimal taxaInicial, BigDecimal taxaFinal) {
 
         //Define o builder
@@ -44,7 +43,7 @@ public class RestauranteRepositoryImpl implements RestauranteRepositoryQueries {
         var predicates = new ArrayList<Predicate>();
 
         if (StringUtils.hasText("nome")) {
-            //liki nome = "%" :nome "%"
+            //like nome = "%" :nome "%"
             predicates.add(builder.like(root.get("nome"), "%" + nome + "%"));
         }
 
@@ -65,12 +64,12 @@ public class RestauranteRepositoryImpl implements RestauranteRepositoryQueries {
         return query.getResultList();
 
     }
-
-    @Override
+*/
+   /* @Override
     public List<Restaurante> comFreteGratisENome(String nome) {
         return this.restauranteRepository.findAll(
                 RestauranteSpecs.comFreteGratis().and(RestauranteSpecs.comBuscaPorNome(nome)));
-    }
+    }*/
 
 
 }

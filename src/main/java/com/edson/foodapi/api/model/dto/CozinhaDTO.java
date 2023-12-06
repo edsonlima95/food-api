@@ -1,6 +1,8 @@
 package com.edson.foodapi.api.model.dto;
 
 
+import com.edson.foodapi.api.model.view.RestauranteView;
+import com.fasterxml.jackson.annotation.JsonView;
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
@@ -9,7 +11,10 @@ import lombok.Setter;
 @Setter
 public class CozinhaDTO {
 
+    @JsonView(RestauranteView.Resumo.class)
     private Long id;
+
+    @JsonView(RestauranteView.Resumo.class)
     private String nome;
 
 }

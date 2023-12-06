@@ -2,6 +2,9 @@ package com.edson.foodapi.api.exception;
 
 import com.edson.foodapi.domain.exception.BadRequestException;
 import com.edson.foodapi.domain.exception.NotFoundException;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.MessageSource;
+import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -23,6 +26,9 @@ import java.util.List;
 
 @ControllerAdvice
 public class ApiExceptionHanlder extends ResponseEntityExceptionHandler {
+
+    @Autowired
+    private MessageSource messageSource;
 
     private static final String MSG_ERROR_INTERAL = "Ocorreu um erro iterno no sistema, tente novamente se persistir" +
             "entre em contato com o suporte";
@@ -112,7 +118,8 @@ public class ApiExceptionHanlder extends ResponseEntityExceptionHandler {
         ex.getBindingResult().getAllErrors().forEach(error -> {
 
             String fieldName = ((FieldError) error).getField();
-            String message = error.getDefaultMessage();
+            //String message = error.getDefaultMessage();
+            String message = messageSource.getMessage(error, LocaleContextHolder.getLocale());
 
             fields.add(new Problem.FieldValidation(fieldName, message));
 

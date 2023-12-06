@@ -4,12 +4,18 @@ package com.edson.foodapi.api.controller;
 import com.edson.foodapi.api.assembler.RestauranteDTOAssembler;
 import com.edson.foodapi.api.model.Inputs.RestauranteInput;
 import com.edson.foodapi.api.model.dto.RestauranteDTO;
+import com.edson.foodapi.api.model.view.RestauranteView;
 import com.edson.foodapi.domain.exception.BadRequestException;
 import com.edson.foodapi.domain.exception.NotFoundException;
 import com.edson.foodapi.domain.model.Restaurante;
+import com.edson.foodapi.domain.repository.RestauranteRepository;
 import com.edson.foodapi.domain.service.RestauranteService;
+import com.fasterxml.jackson.annotation.JsonView;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -27,10 +33,25 @@ public class RestauranteController {
     private RestauranteService restauranteService;
 
     @Autowired
+    private RestauranteRepository restauranteRepository;
+
+    @Autowired
     RestauranteDTOAssembler restauranteAssembler;
 
+    //@JsonView(RestauranteView.Resumo.class)
     @GetMapping
-    public List<RestauranteDTO> listar() {
+    public Page<RestauranteDTO> listar(Pageable pageable) {
+
+        Page<Restaurante> restaurantesPaginados = this.restauranteRepository.findAll(pageable);
+
+        List<RestauranteDTO> restauranteDTOS = restauranteAssembler.toListDTO(restaurantesPaginados.getContent());
+
+        return new PageImpl<>(restauranteDTOS, pageable, restaurantesPaginados.getTotalElements());
+    }
+
+    @JsonView(RestauranteView.ApenasNome.class)
+    @GetMapping(params = "projecao=apenas-nome")
+    public List<RestauranteDTO> listarApenasNomes() {
         List<Restaurante> restauranteList = this.restauranteService.listar();
         return restauranteAssembler.toListDTO(restauranteList);
 
@@ -81,21 +102,21 @@ public class RestauranteController {
         this.restauranteService.deletar(id);
     }
 
-    @GetMapping("/buscar")
+   /* @GetMapping("/buscar")
     public ResponseEntity<List<Restaurante>> buscaCompleta(String nome, BigDecimal taxaInicial, BigDecimal taxaFinal) {
 
         List<Restaurante> restaurantes = this.restauranteService.buscaCompleta(nome, taxaInicial, taxaFinal);
 
         return ResponseEntity.ok(restaurantes);
-    }
+    }*/
 
-    @GetMapping("/buscar-frete-gratis")
+   /* @GetMapping("/buscar-frete-gratis")
     public ResponseEntity<List<Restaurante>> buscaComFreteGratisEnome(String nome) {
 
         List<Restaurante> restaurantes = this.restauranteService.buscaComFreteGratis(nome);
 
         return ResponseEntity.ok(restaurantes);
-    }
+    }*/
 
     @GetMapping("/buscar-primeiro")
     public Optional<Restaurante> buscaPrimeiro() {
@@ -104,36 +125,37 @@ public class RestauranteController {
 
     @PutMapping("/{id}/ativar")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void ativar(@PathVariable Long id){
+    public void ativar(@PathVariable Long id) {
         this.restauranteService.ativar(id);
     }
 
     @DeleteMapping("/{id}/inativar")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void inativar(@PathVariable Long id){
+    public void inativar(@PathVariable Long id) {
         this.restauranteService.inativar(id);
     }
 
     @PutMapping("/{id}/abertura")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void abrir(@PathVariable Long id){
+    public void abrir(@PathVariable Long id) {
         this.restauranteService.abrir(id);
     }
+
     @PutMapping("/{id}/fechamento")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void fechar(@PathVariable Long id){
+    public void fechar(@PathVariable Long id) {
         this.restauranteService.fechar(id);
     }
 
     @DeleteMapping("/fechamento")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void fechamentoCompleto(@RequestBody Set<Long> restaurantesId){
+    public void fechamentoCompleto(@RequestBody Set<Long> restaurantesId) {
         this.restauranteService.fechamentoEmMassa(restaurantesId);
     }
 
     @PutMapping("/abertura")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void aberturaCompleto(@RequestBody Set<Long> restaurantesId){
+    public void aberturaCompleto(@RequestBody Set<Long> restaurantesId) {
         this.restauranteService.aberturaEmMassa(restaurantesId);
     }
 }

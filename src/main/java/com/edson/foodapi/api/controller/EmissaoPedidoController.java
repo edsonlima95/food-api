@@ -4,7 +4,6 @@ package com.edson.foodapi.api.controller;
 import com.edson.foodapi.api.assembler.PedidoDTOAssembler;
 import com.edson.foodapi.api.model.Inputs.PedidoInput;
 import com.edson.foodapi.api.model.dto.PedidoDTO;
-import com.edson.foodapi.api.model.dto.PedidoResumoDTO;
 import com.edson.foodapi.domain.exception.BadRequestException;
 import com.edson.foodapi.domain.exception.NotFoundException;
 import com.edson.foodapi.domain.model.Pedido;

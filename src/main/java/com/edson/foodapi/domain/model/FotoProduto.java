@@ -4,30 +4,23 @@ package com.edson.foodapi.domain.model;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import lombok.Getter;
-
-import java.math.BigDecimal;
 
 @Entity
 @Data
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
-public class Produto {
+public class FotoProduto {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @EqualsAndHashCode.Include
+    @Column(name = "produto_id")
     private Long id;
 
-    private String nome;
-
+    private String nomeArquivo;
     private String descricao;
+    private String contentType;
+    private Long tamanho;
 
-    private BigDecimal preco;
-
-    private Boolean ativo;
-
-    @ManyToOne
-    private Restaurante restaurante;
-
-
+    @OneToOne(fetch = FetchType.LAZY)
+    @MapsId
+    private Produto produto;
 }

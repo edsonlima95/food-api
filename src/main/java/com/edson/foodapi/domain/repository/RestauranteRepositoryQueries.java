@@ -7,7 +7,7 @@ import java.util.List;
 
 public interface RestauranteRepositoryQueries {
 
-    List<Restaurante> buscarCompleta(String nome, BigDecimal taxaInicial, BigDecimal taxaFinal);
+    //List<Restaurante> buscarCompleta(String nome, BigDecimal taxaInicial, BigDecimal taxaFinal);
 
-    List<Restaurante> comFreteGratisENome(String nome);
+   // List<Restaurante> comFreteGratisENome(String nome);
 }

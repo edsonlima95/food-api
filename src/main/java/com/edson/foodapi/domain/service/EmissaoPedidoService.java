@@ -1,14 +1,11 @@
 package com.edson.foodapi.domain.service;
 
 import com.edson.foodapi.domain.exception.BadRequestException;
-import com.edson.foodapi.domain.exception.NotFoundException;
 import com.edson.foodapi.domain.model.*;
 import com.edson.foodapi.domain.repository.PedidoRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import java.util.List;
 
 @Service
 public class EmissaoPedidoService {
