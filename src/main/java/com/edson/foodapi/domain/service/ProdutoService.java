@@ -2,6 +2,7 @@ package com.edson.foodapi.domain.service;
 
 import com.edson.foodapi.domain.exception.NotFoundException;
 import com.edson.foodapi.domain.model.Produto;
+import com.edson.foodapi.domain.model.ProdutoDto;
 import com.edson.foodapi.domain.model.Restaurante;
 import com.edson.foodapi.domain.repository.ProdutoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,4 +40,5 @@ public class ProdutoService {
                        new NotFoundException(String.format("Produto de codigo %d, não existe para o " +
                                " restaurante de código %d",produtoId, restauranteId)));
     }
+
 }
