@@ -11,6 +11,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
+import org.springframework.security.access.AuthorizationServiceException;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.validation.FieldError;
 import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -63,6 +65,19 @@ public class ApiExceptionHanlder extends ResponseEntityExceptionHandler {
 
     }
 
+    @ExceptionHandler(BadCredentialsException.class)
+    public ResponseEntity<?> handleBadCredentialsException(BadCredentialsException e) {
+
+        String title = "Credenciais incorretas";
+        String type = "http://food-api/credenciais-incorretas";
+        String detail = e.getMessage();
+
+        Problem problem = getProblem(title, type, detail, HttpStatus.BAD_REQUEST)
+                .build();
+
+        return new ResponseEntity<>(problem, HttpStatus.BAD_REQUEST);
+    }
+
     @ExceptionHandler(BadRequestException.class)
     public ResponseEntity<?> handleBadRequestException(BadRequestException e) {
 
@@ -75,6 +90,21 @@ public class ApiExceptionHanlder extends ResponseEntityExceptionHandler {
                 .build();
 
         return new ResponseEntity<>(problem, HttpStatus.BAD_REQUEST);
+
+    }
+
+    @ExceptionHandler(AuthorizationServiceException.class)
+    public ResponseEntity<?> handleAuthorizationServiceException(AuthorizationServiceException e) {
+
+        String title = "Sem autorização";
+        String type = "http://food-api/acesso-negado";
+        String detail = e.getMessage();
+
+        Problem problem = getProblem(title, type, detail, HttpStatus.UNAUTHORIZED)
+                .userMessage(MSG_ERROR_INTERAL)
+                .build();
+
+        return new ResponseEntity<>(problem, HttpStatus.UNAUTHORIZED);
 
     }
 
@@ -91,6 +121,8 @@ public class ApiExceptionHanlder extends ResponseEntityExceptionHandler {
         return new ResponseEntity<>(problem, HttpStatus.BAD_REQUEST);
 
     }
+
+
 
     @ExceptionHandler(DataIntegrityViolationException.class)
     public ResponseEntity<?> handleDataIntegrityViolationException(){

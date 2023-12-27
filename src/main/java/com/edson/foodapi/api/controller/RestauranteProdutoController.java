@@ -18,6 +18,7 @@ import com.edson.foodapi.domain.service.RestauranteService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.InputStreamResource;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -46,11 +47,13 @@ public class RestauranteProdutoController {
     @Autowired
     private RestauranteService restauranteService;
 
-    @Autowired
+/*    @Autowired
     private LocalStorageService localStorageService;
 
     @Autowired
-    private S3StorageService s3StorageService;
+    private S3StorageService s3StorageService;*/
+
+    private FotoStorageService fotoStorage;
 
     @Autowired
     private ProdutoDTOAssembler produtoDTOAssembler;
@@ -75,7 +78,7 @@ public class RestauranteProdutoController {
 
     @GetMapping("/produtos/{produtoId}")
     public ProdutoDTO buscarProdutos(@PathVariable Long restauranteId,
-                                                     @PathVariable Long produtoId) {
+                                     @PathVariable Long produtoId) {
 
         Produto produto = this.produtoService.buscarPorRestauranteEProdutoId(restauranteId, produtoId);
 
@@ -102,7 +105,7 @@ public class RestauranteProdutoController {
 
     @GetMapping(value = "/produtos/{produtoId}/foto", produces = MediaType.APPLICATION_JSON_VALUE)
     public FotoProdutoDTO buscarFotoDoProduto(@PathVariable Long restauranteId,
-                                                       @PathVariable Long produtoId) {
+                                              @PathVariable Long produtoId) {
 
         FotoProduto fotoProduto = this.fotoProdutoService.buscarPorResutauranteEProdutoId(restauranteId, produtoId);
 
@@ -110,19 +113,26 @@ public class RestauranteProdutoController {
     }
 
     @GetMapping(value = "/produtos/{produtoId}/foto", produces = MediaType.IMAGE_PNG_VALUE)
-    public ResponseEntity<InputStreamResource> servirFotoDoProduto(@PathVariable Long restauranteId,
+    public ResponseEntity<?> servirFotoDoProduto(@PathVariable Long restauranteId,
                                                                    @PathVariable Long produtoId) {
         try {
 
-        FotoProduto fotoProduto = this.fotoProdutoService.buscarPorResutauranteEProdutoId(restauranteId, produtoId);
+            FotoProduto fotoProduto = this.fotoProdutoService.buscarPorResutauranteEProdutoId(restauranteId, produtoId);
 
-        InputStream fotoStream = this.localStorageService.recuperar(fotoProduto.getNomeArquivo());
+            FotoStorageService.RecuperarArquivo fotoRecuperada = fotoStorage.recuperar(fotoProduto.getNomeArquivo());
 
-        return ResponseEntity.ok()
-                .contentType(MediaType.IMAGE_PNG)
-                .body(new InputStreamResource(fotoStream));
+            if (fotoRecuperada.getUrl() != null) {
+                return ResponseEntity
+                        .status(HttpStatus.FOUND)
+                        .header(HttpHeaders.LOCATION, fotoRecuperada.getUrl())
+                        .build();
+            } else {
+                return ResponseEntity.ok()
+                        .contentType(MediaType.IMAGE_PNG)
+                        .body(new InputStreamResource(fotoRecuperada.getInputStream()));
+            }
 
-        } catch (RuntimeException e){
+        } catch (RuntimeException e) {
             return ResponseEntity.notFound().build();
         }
     }
@@ -130,7 +140,7 @@ public class RestauranteProdutoController {
     @DeleteMapping("/produtos/{produtoId}/foto")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleta(@PathVariable Long restauranteId,
-                       @PathVariable Long produtoId){
+                       @PathVariable Long produtoId) {
 
         FotoProduto fotoProduto = this.fotoProdutoService.buscarPorResutauranteEProdutoId(restauranteId, produtoId);
 
@@ -140,6 +150,8 @@ public class RestauranteProdutoController {
         //this.localStorageService.remover(fotoProduto.getNomeArquivo());
 
         //Remove foto s3
-        this.s3StorageService.remover(fotoProduto.getNomeArquivo());
+        //this.s3StorageService.remover(fotoProduto.getNomeArquivo());
+
+        this.fotoStorage.remover(fotoProduto.getNomeArquivo());
     }
 }

@@ -8,9 +8,11 @@ import com.amazonaws.services.s3.model.PutObjectRequest;
 import com.edson.foodapi.domain.service.FotoStorageService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Service;
 
 import java.io.InputStream;
+import java.net.URL;
 
 @Service
 public class S3StorageService implements FotoStorageService {
@@ -26,8 +28,13 @@ public class S3StorageService implements FotoStorageService {
     private String diretorio;
 
     @Override
-    public InputStream recuperar(String nomeArquivo) {
-        return null;
+    public RecuperarArquivo recuperar(String nomeArquivo) {
+        String caminhoArquivo = getCaminhoArquivo(nomeArquivo);
+
+        URL url = amazonS3.getUrl(this.bucket, caminhoArquivo);
+
+        return RecuperarArquivo.builder()
+                .url(url.toString()).build();
     }
 
     @Override

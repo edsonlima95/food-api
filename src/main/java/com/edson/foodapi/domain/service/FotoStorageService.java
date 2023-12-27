@@ -9,11 +9,19 @@ import java.util.UUID;
 
 public interface FotoStorageService {
 
-    InputStream recuperar(String nomeArquivo);
+    RecuperarArquivo recuperar(String nomeArquivo);
 
     void armazenar(NovaFoto novaFoto);
 
     void remover(String nomeArquivo);
+
+    default void enviarArquivo(String nomeArquivoAntigo, NovaFoto novaFoto) {
+        this.armazenar(novaFoto);
+
+        if (nomeArquivoAntigo != null) {
+            this.remover(nomeArquivoAntigo);
+        }
+    }
 
     default String gerarNomeArquivoUUID(String nomeArquivo) {
         return UUID.randomUUID().toString() + "-" + nomeArquivo;
@@ -21,10 +29,19 @@ public interface FotoStorageService {
 
     @Builder
     @Getter
-    class NovaFoto{
+    class NovaFoto {
 
         private String nomeArquivo;
         private String contentType;
+        private InputStream inputStream;
+
+    }
+
+    @Builder
+    @Getter
+    class RecuperarArquivo {
+
+        private String url;
         private InputStream inputStream;
 
     }

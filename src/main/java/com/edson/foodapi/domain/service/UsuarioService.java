@@ -6,21 +6,24 @@ import com.edson.foodapi.domain.exception.NotFoundException;
 import com.edson.foodapi.domain.model.Usuario;
 import com.edson.foodapi.domain.repository.UsuarioRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
 
 @Service
-public class UsuarioService {
+public class UsuarioService implements UserDetailsService {
 
     @Autowired
     private UsuarioRepository usuarioRepository;
 
     public void cadastrar(Usuario usuario) {
 
-        Optional<Usuario> usuarioAtual = this.buscarPorEmail(usuario.getEmail());
+        Usuario usuarioAtual = this.buscarPorEmail(usuario.getEmail());
 
-        if(usuarioAtual.isPresent()){
+        if(usuarioAtual != null){
             throw new BadRequestException("E-mail informado já está cadastrado");
         }
 
@@ -51,9 +54,15 @@ public class UsuarioService {
 
     }
 
-    public Optional<Usuario> buscarPorEmail(String email) {
+    public Usuario buscarPorEmail(String email) {
 
-        return this.usuarioRepository.findByEmail(email);
+        return this.usuarioRepository.findByEmail(email).orElseThrow(() ->
+                new NotFoundException("Usuário não encontrado"));
 
+    }
+
+    @Override
+    public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
+        return this.buscarPorEmail(email);
     }
 }

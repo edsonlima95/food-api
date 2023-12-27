@@ -5,11 +5,13 @@ import com.edson.foodapi.api.assembler.PedidoDTOAssembler;
 import com.edson.foodapi.api.core.data.PagebleTranslator;
 import com.edson.foodapi.api.model.dto.PedidoDTO;
 import com.edson.foodapi.api.model.dto.PedidoResumoDTO;
+import com.edson.foodapi.domain.infra.service.SmtpEmailServiceImpl;
 import com.edson.foodapi.domain.infra.specs.PedidoSpecs;
 import com.edson.foodapi.domain.model.Pedido;
 import com.edson.foodapi.domain.repository.PedidoRepository;
 import com.edson.foodapi.domain.filter.PedidoFilter;
 import com.edson.foodapi.domain.service.PedidoService;
+import com.edson.foodapi.domain.service.SendEmailService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -67,7 +69,7 @@ public class PedidoController {
         List<PedidoResumoDTO> listResumoDto =
                 this.pedidoDTOAssembler.toListResumoDto(pedidosFiltradosPaginados.getContent());
 
-        return new PageImpl<>(listResumoDto,pageable, pedidosFiltradosPaginados.getTotalElements());
+        return new PageImpl<>(listResumoDto, pageable, pedidosFiltradosPaginados.getTotalElements());
 
     }
 
@@ -79,12 +81,7 @@ public class PedidoController {
     @PutMapping("/{id}/confirmar")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void confirmar(@PathVariable Long id) {
-
-        Pedido pedido = this.pedidoService.buscarPorId(id);
-
-        pedido.confirmar();
-
-        this.pedidoService.atualizar(pedido);
+        this.pedidoService.confirmar(id);
     }
 
     @PutMapping("/{id}/entregar")
@@ -114,7 +111,7 @@ public class PedidoController {
      * ex: nomeCliente -> cliente.nome
      * ex2: nomeRestaurante -> restaurante.nome
      */
-    private Pageable pageableTradutor(Pageable pageable){
+    private Pageable pageableTradutor(Pageable pageable) {
 
         var mapeamento = Map.of(
                 "id", "id",

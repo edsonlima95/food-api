@@ -2,6 +2,7 @@ package com.edson.foodapi.api.controller;
 
 
 import com.edson.foodapi.api.assembler.RestauranteDTOAssembler;
+import com.edson.foodapi.api.controller.openapidoc.RestauranteControllerOpenApiDoc;
 import com.edson.foodapi.api.model.Inputs.RestauranteInput;
 import com.edson.foodapi.api.model.dto.RestauranteDTO;
 import com.edson.foodapi.api.model.view.RestauranteView;
@@ -24,10 +25,9 @@ import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
-
 @RestController
 @RequestMapping("/restaurantes")
-public class RestauranteController {
+public class RestauranteController implements RestauranteControllerOpenApiDoc {
 
     @Autowired
     private RestauranteService restauranteService;

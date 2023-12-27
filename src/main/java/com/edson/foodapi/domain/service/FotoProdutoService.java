@@ -25,10 +25,7 @@ public class FotoProdutoService {
     private FotoProdutoRepository fotoProdutoRepository;
 
     @Autowired
-    private LocalStorageService localStorageService;
-
-    @Autowired
-    private S3StorageService s3StorageService;
+    private FotoStorageService fotoService;
 
     @Transactional
     public void atualizar(FotoProduto fotoProduto, InputStream inputStream) {
@@ -40,21 +37,22 @@ public class FotoProdutoService {
         Optional<FotoProduto> fotoProdutoAtual =
                 this.fotoProdutoRepository.findFotoById(restauranteId, produtoId);
 
+        String nomeArquivoAntigo = null;
+
         if (fotoProdutoAtual.isPresent()) {
             //Remove os dados da foto que já existe no banco.
             this.fotoProdutoRepository.delete(fotoProdutoAtual.get());
 
             //Remove a foto do disco
-            this.localStorageService.remover(fotoProdutoAtual.get().getNomeArquivo());
-
+            nomeArquivoAntigo = fotoProdutoAtual.get().getNomeArquivo();
         }
 
         //Seta o nome do arquivo
-        String nomeArquivoUUID = this.localStorageService.gerarNomeArquivoUUID(fotoProduto.getNomeArquivo());
+        String nomeArquivoUUID = this.fotoService.gerarNomeArquivoUUID(fotoProduto.getNomeArquivo());
         fotoProduto.setNomeArquivo(nomeArquivoUUID);
 
         //Salva a nova foto no banco.
-        this.fotoProdutoRepository.save(fotoProduto);
+        fotoProduto = this.fotoProdutoRepository.save(fotoProduto);
 
         //Monta as propriedades do arquivo
         FotoStorageService.NovaFoto novaFoto = FotoStorageService.NovaFoto
@@ -64,11 +62,8 @@ public class FotoProdutoService {
                 .contentType(fotoProduto.getContentType())
                 .build();
 
-        //Salva na pasta local.
-       // this.localStorageService.armazenar(novaFoto);
-
-        //Salva na S3 da amazon
-        this.s3StorageService.armazenar(novaFoto);
+        System.out.println(nomeArquivoAntigo);
+        this.fotoService.enviarArquivo(nomeArquivoAntigo, novaFoto);
     }
 
     public FotoProduto buscarPorResutauranteEProdutoId(Long restauranteId, Long produtoId){

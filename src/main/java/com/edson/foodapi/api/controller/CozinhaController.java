@@ -1,8 +1,12 @@
 package com.edson.foodapi.api.controller;
 
 
+import com.edson.foodapi.api.controller.openapidoc.CozinhaControllerOpenApiDoc;
 import com.edson.foodapi.domain.model.Cozinha;
 import com.edson.foodapi.domain.service.CozinhaService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -13,7 +17,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/cozinhas")
-public class CozinhaController {
+public class CozinhaController implements CozinhaControllerOpenApiDoc {
 
     @Autowired
     private CozinhaService cozinhaService;
@@ -36,16 +40,15 @@ public class CozinhaController {
     }
 
     @PutMapping("/{id}")
-    public Cozinha atualizar(@Valid @RequestBody Cozinha cozinha, @PathVariable Long id) {
+    public Cozinha atualizar(@Valid @RequestBody Cozinha cozinha,
+                             @PathVariable Long id) {
         return this.cozinhaService.atualizar(id, cozinha);
     }
 
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deletar(@PathVariable Long id) {
-
         this.cozinhaService.deletar(id);
-
     }
 
     @GetMapping("/por-nome")

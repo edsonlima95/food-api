@@ -24,7 +24,7 @@ public class CozinhaService {
     public Cozinha buscarPorId(Long id) {
 
         return this.cozinhaRespository.findById(id)
-                .orElseThrow(() -> new NotFoundException(String.format("Não foi possível encontrar nenhuma cozinha com codigo %d", id)));
+                .orElseThrow(() -> new NotFoundException(id));
     }
 
     public void cadastrar(Cozinha cozinha) {

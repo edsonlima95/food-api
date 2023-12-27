@@ -9,6 +9,7 @@ import com.edson.foodapi.domain.exception.NotFoundException;
 import com.edson.foodapi.domain.model.Pedido;
 import com.edson.foodapi.domain.model.Usuario;
 import com.edson.foodapi.domain.service.EmissaoPedidoService;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -18,6 +19,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/pedidos")
+@Tag(name = "Emissão de pedidos")
 public class EmissaoPedidoController {
 
     @Autowired

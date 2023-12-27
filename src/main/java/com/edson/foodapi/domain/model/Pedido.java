@@ -6,16 +6,18 @@ import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.edson.foodapi.domain.event.PedidoConfirmadoEvent;
 import com.edson.foodapi.domain.exception.BadRequestException;
 import jakarta.persistence.*;
 import lombok.*;
 
 import org.hibernate.annotations.CreationTimestamp;
+import org.springframework.data.domain.AbstractAggregateRoot;
 
 @Data
-@EqualsAndHashCode(onlyExplicitlyIncluded = true)
+@EqualsAndHashCode(onlyExplicitlyIncluded = true, callSuper = false)
 @Entity
-public class Pedido {
+public class Pedido extends AbstractAggregateRoot<Pedido> {
 
 	@EqualsAndHashCode.Include
 	@Id
@@ -67,6 +69,9 @@ public class Pedido {
 	public void confirmar(){
 		setStatus(StatusPedido.CONFIRMADO);
 		setDataConfirmacao(OffsetDateTime.now());
+
+		//Evento envia email apos o pedido ser confirmado.
+		registerEvent(new PedidoConfirmadoEvent(this));
 	}
 
 	public void entregar(){

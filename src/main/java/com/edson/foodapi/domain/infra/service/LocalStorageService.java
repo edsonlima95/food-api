@@ -3,6 +3,7 @@ package com.edson.foodapi.domain.infra.service;
 
 import com.edson.foodapi.domain.service.FotoStorageService;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Service;
 import org.springframework.util.FileCopyUtils;
 
@@ -12,6 +13,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 
 @Service
+@Primary
 public class LocalStorageService implements FotoStorageService {
 
     @Value("${foodapi.storage.local}")
@@ -31,11 +33,12 @@ public class LocalStorageService implements FotoStorageService {
     }
 
     @Override
-    public InputStream recuperar(String nomeArquivo) {
+    public RecuperarArquivo recuperar(String nomeArquivo) {
         try {
             Path novoCaminho = Path.of(caminhoArquivo, nomeArquivo);
 
-           return Files.newInputStream(novoCaminho);
+            return RecuperarArquivo.builder()
+                    .inputStream(Files.newInputStream(novoCaminho)).build();
 
         } catch (Exception e) {
             throw new StorageException("Falha ao tentar retornar um arquivo",e);
